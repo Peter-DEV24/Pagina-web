@@ -1,55 +1,59 @@
 AOS.init();
 
-let timeTimeOut = 3500;
-let time = 300;
+const timeTimeOut = 3500;
+const time = 300;
+
+const introLogo = document.querySelector("#intro_logo");
+const hero = document.querySelector("#hero");
+const imgHero1 = document.querySelector("#img_hero_1");
+const imgHero2 = document.querySelector("#img_hero_2");
+const spanIcon = document.querySelector("#span_icon");
+const body = document.querySelector("body");
+const favicon = document.querySelector("#favicon");
 
 const animation_1 = () => {
-   document.querySelector("#intro_logo").classList.add("d-none");
-   // document.querySelector("#hero").classList.remove("d-none");
+   introLogo.classList.add("d-none");
 }
+
 const animation_2 = () => {
-   document.querySelector("#hero").classList.add("fade_in");
-   document.querySelector("#img_hero_1").classList.add("img_left_right");
-   document.querySelector("#img_hero_2").classList.add("img_right_left");
+   hero.classList.add("fade_in");
+   imgHero1.classList.add("img_left_right");
+   imgHero2.classList.add("img_right_left");
 }
+
 const animation_3 = () => {
-   document.querySelector("#span_icon").classList.remove("d-none");
-   document.querySelector("body").classList.remove("scroll-y-none");
+   spanIcon.classList.remove("d-none");
+   body.classList.remove("scroll-y-none");
 }
 
-
-
-
-//#region EFECTO PARALLAX
-window.onscroll = function () {
-   let position = window.pageYOffset || document.documentElement.scrollTop;
-   let img_hamburger_1 = document.getElementById("img_hamburger_1");
-   let section_hamburgers = document.getElementById("section_hamburgers");
-   // console.log(section_hamburgers.style);
-   // img_hamburger_1.style.bottom = `${position * 0.01}px` ;
+const updateLogoForDarkMode = () => {
+   let logo = window.matchMedia('(prefers-color-scheme: dark)').matches ? "assets/crown_logo_white.png" : "assets/crown_logo.png";
+   favicon.href = logo;
 }
-//#endregion EFECTO PARALLAX
 
+window.matchMedia('(prefers-color-scheme: dark)').addListener(updateLogoForDarkMode);
+updateLogoForDarkMode();  // Inicializa el logo según el modo oscuro
 
-//#region DETETCTAR DARK-MODE EN EL NAVEGADOR
-const favicon = document.querySelector("#favicon");
-let logo = "assets/crown_logo.png"
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) logo = "assets/crown_logo_white.png"
-favicon.href = logo;
-//#endregion DETETCTAR DARK-MODE EN EL NAVEGADOR
+window.onscroll = () => {
+   const position = window.pageYOffset || document.documentElement.scrollTop;
+   document.getElementById("img_hamburger_1").style.bottom = `${position * 0.01}px`;
+}
 
-
-
-
-document.addEventListener("DOMContentLoaded", function() {
-   document.querySelector("body").classList.add("scroll-y-none");
-   document.querySelector("#img_hero_1").classList.remove("img_left_right");
-   document.querySelector("#img_hero_2").classList.remove("img_right_left");
+document.addEventListener("DOMContentLoaded", () => {
+   body.classList.add("scroll-y-none");
+   imgHero1.classList.remove("img_left_right");
+   imgHero2.classList.remove("img_right_left");
 
    const animations = () => {
-      setTimeout(() => animation_1(), timeTimeOut);
-      setTimeout(() => animation_2(), timeTimeOut += time);
-      setTimeout(() => animation_3(), timeTimeOut += time + 2500);
+      setTimeout(() => {
+         animation_1();
+         setTimeout(() => {
+            animation_2();
+            setTimeout(() => {
+               animation_3();
+            }, time + 2500);
+         }, time);
+      }, timeTimeOut);
    }
    animations();
-})
+});
